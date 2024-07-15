@@ -4,6 +4,7 @@ from flask import Flask,jsonify
 from ..db import db  # Import SQLAlchemy instance từ db.py
 from .routers import api  # Import blueprint từ routes.py
 from exceptions import CustomAPIException
+from ..utils.response import CustomResponse
 
 def create_app():
     app = Flask(__name__)
@@ -22,11 +23,11 @@ def create_app():
     @app.errorhandler(CustomAPIException)
     def handle_custom_error(error):
         status_code = error.status_code if hasattr(error, 'status_code') else 500
-        response = {
+        errors = {
             'error': error.message,
-            'status_code': status_code
         }
-        return jsonify(response), status_code
+        response = CustomResponse(data=errors,error_code = status_code)
+        return jsonify(response.to_dict()), status_code
     
      # Cấu hình CORS cho ứng dụng Flask
     CORS(app, resources={r"/api/*": {"origins": "*"}})
