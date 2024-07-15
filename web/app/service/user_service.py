@@ -6,8 +6,8 @@ import jwt
 from datetime import datetime, timedelta
 import pytz
 from .token_service import create_token_with_sql
-
-SECRET_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+from flask_jwt_extended import create_access_token, create_refresh_token
+from datetime import timedelta
 
 def create_user(data):
     try:
@@ -15,16 +15,17 @@ def create_user(data):
         if not isinstance(result_data, User):
             raise ValueError("Result data is not a User instance")
         # Nếu result_data là một đối tượng User, tiếp tục các thao tác khác
-        access_token = create_access_token(result_data)
-        refresh_token = create_refresh_token(result_data)
-        
-        result =  create_token_with_sql(result_data,access_token,refresh_token)
+        access_token = create_access_token(identity=result_data.id, expires_delta=timedelta(minutes=15)) #thời gian sống 15 phút
+        refresh_token = create_refresh_token(identity=result_data.id, expires_delta=timedelta(days=30)) #thời gian sống 30 ngày
+        result =  create_token_with_sql(result_data,refresh_token)
         return result
     except SQLAlchemyError as e:
+        print(f"loi day {e}")
         raise e
     except ValueError as ve:
         raise ve
     except Exception as e:
+        print(f"loi day1 {e}")
         raise e
     
 
@@ -34,10 +35,10 @@ def get_user_by_username(username):
 def get_user_by_username_and_pass(username,password):
     try:
         user =  User.query.filter_by(username = username).first()
-        # print(check_password_hash(user.password, password))
         if user and check_password_hash(user.password, password):
-            access_token = create_access_token(user)
-            refresh_token = create_refresh_token(user)
+            access_token = create_access_token(identity=user.id, expires_delta=timedelta(minutes=1), additional_claims={'role':user.role.name})
+            refresh_token = create_refresh_token(identity=user.id ,expires_delta=timedelta(days=30), additional_claims={'role':user.role.name})
+            create_token_with_sql(user,refresh_token)
             successful = {
                 'access_token': access_token,
                 'refresh_token': refresh_token,
@@ -49,7 +50,7 @@ def get_user_by_username_and_pass(username,password):
         print("err:",sql) 
         raise sql
     except Exception as e:
-        print("loi",e)
+        print("loi day",e)
         raise e
     
 def create_with_sql(data):
@@ -73,37 +74,6 @@ def create_with_sql(data):
     except Exception as e:
         raise e
     
-def create_access_token(user_data):
-    try:
-        # print('toke')
-        payload = {
-            'user_id': user_data.id,
-            'username': user_data.username,
-            'exp': datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')) + timedelta(minutes=15)  # Token hết hạn sau 15 phút
-        }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-        return token
-    except Exception as a:
-        return a
-
-def create_refresh_token(user_data):
-    payload = {
-        'user_id': user_data.id,
-        'username': user_data.username,
-        'exp': datetime.now(pytz.timezone('Asia/Ho_Chi_Minh')) + timedelta(days=30)  # Token hết hạn sau 30 ngày
-    }
-    token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-    return token
-
-def verify_token(token):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        return payload
-    except jwt.ExpiredSignatureError:
-        return None  # Token đã hết hạn
-    except jwt.InvalidTokenError:
-        return None  # Token không hợp lệ
-    
 def find_by_id_user(id):
     try:
         user = find_by_id_user_with_sql(id)
@@ -116,3 +86,6 @@ def find_by_id_user(id):
 @staticmethod 
 def find_by_id_user_with_sql(id):
     return User.query.get(id)
+
+def generate_accsse_token_by_refresh(id,role):
+    return create_access_token(identity=id,expires_delta=timedelta(minutes=15), additional_claims={'role':role})
