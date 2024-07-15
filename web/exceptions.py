@@ -19,3 +19,7 @@ class ConflictException(CustomAPIException):
 class InternalServerException(CustomAPIException):
     def __init__(self, message="Internal Server Error"):
         super().__init__(message, 500)
+
+class InvalidCredentialsException(CustomAPIException):
+    def __init__(self, message="Invalid credentials"):
+        super().__init__(message, 401)
