@@ -8,7 +8,6 @@ def create_with_sql(data):
             name = data['name'],
             description =['description']
         )
-        print(new_data.id)
         db.session.add(new_data)
         db.session.commit()
         return new_data

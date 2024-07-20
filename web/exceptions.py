@@ -23,3 +23,7 @@ class InternalServerException(CustomAPIException):
 class InvalidCredentialsException(CustomAPIException):
     def __init__(self, message="Invalid credentials"):
         super().__init__(message, 401)
+        
+class ForbiddenException(CustomAPIException):
+    def __init__(self, message = "403 Forbidden"):
+        super().__init__(message, 403)
