@@ -28,3 +28,5 @@ web/app/utils/__pycache__/response.cpython-312.pyc
 web/app/models/__pycache__/user.cpython-312.pyc
 web/app/api/__pycache__/routers.cpython-312.pyc
 web/app/utils/__pycache__/response.cpython-312.pyc
+web/venv/
+web/__pycache__
