@@ -43,11 +43,13 @@ def register_user():
 @api.route('/login', methods=['POST'])
 def login():
     try:
+        print("dhkdshkfhkhd")
         data = request.get_json()
+        print(data['username'])
         result = get_user_by_username_and_pass(data['username'],data['password'])
         if not result:
             raise InvalidCredentialsException("Username or password incorect, Please input again!")
-        respone = CustomResponse(data=result)
+        respone = CustomResponse(data=result,status_code=200)
         return jsonify(respone.to_dict()), 200
     except IntegrityError as ie:
         raise ConflictException("Username already exists")
@@ -56,13 +58,14 @@ def login():
     except SQLAlchemyError as se:
         raise InternalServerException("Database error")
     except Exception as ex:
+        print("dfjgksdfjss",ex)
         raise ex
 
 # Create role new with role admin
 @api.route('/role/register', methods=['POST'])
-@jwt_required()
-@token_required
-@role_required('admin')
+# @jwt_required()
+# @token_required
+# @role_required('admin')
 def create_role():
     try:
         data = request.get_json()

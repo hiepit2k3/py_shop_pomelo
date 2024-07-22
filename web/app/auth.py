@@ -20,6 +20,7 @@ def role_required(role):
         def wrapper(*args, **kwargs):
             verify_jwt_in_request()
             claims = get_jwt()
+            print(claims)
             if claims['role'] != role:
                 raise ForbiddenException("403 Forbidden")
             return fn(*args, **kwargs)

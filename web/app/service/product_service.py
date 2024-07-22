@@ -7,6 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 def create_product(data):
     try:
+        
         result = create_product_with_sql(data)
         return result
     except SQLAlchemyError as sql:
@@ -29,4 +30,11 @@ def create_product_with_sql(data):
         return product
     except SQLAlchemyError as sql:
         print("loi sql nua")
+        raise sql
+    
+def find_by_id_product(id):
+    try:
+        product  = Product.query.filter(Product.id == id).first()
+        return product
+    except SQLAlchemyError as sql:
         raise sql

@@ -32,7 +32,7 @@ def create_app():
         errors = {
             'error': error.message,
         }
-        response = CustomResponse(data=errors,error_code = status_code)
+        response = CustomResponse(data=errors,status_code = status_code)
         return jsonify(response.to_dict()), status_code
     
      # Cấu hình CORS cho ứng dụng Flask
