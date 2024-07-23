@@ -8,12 +8,8 @@
   ],
   "routes": [
     {
-      "src": "/api/user(.*)",
-      "dest": "web/app/api/routers_user.py"
-    },
-    {
-      "src": "/api/product(.*)",
-      "dest": "web/app/api/routers_product.py"
+      "src": "/api/(.*)",
+      "dest": "web/run.py"
     }
   ]
 }
