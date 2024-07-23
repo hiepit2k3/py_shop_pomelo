@@ -1,4 +1,10 @@
-from app import create_app
+import sys
+import os
+
+# Thêm thư mục web vào đường dẫn tìm kiếm mô-đun
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from app.api import create_app
 
 app = create_app()
 
