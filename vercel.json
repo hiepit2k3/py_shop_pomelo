@@ -2,18 +2,18 @@
   "version": 2,
   "builds": [
     {
-      "src": "/web/run.py",
+      "src": "web/run.py",
       "use": "@vercel/python"
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/web/app/api/routers_user.py"
+      "src": "/(.*)",
+      "dest": "web/app/api/routers_user.py"
     },
     {
       "src": "/(.*)",
-      "dest": "/web/app/api/routers_product.py"
+      "dest": "web/app/api/routers_product.py"
     }
   ]
 }
