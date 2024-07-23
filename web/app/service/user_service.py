@@ -2,7 +2,6 @@ from app.db import db
 from app.models.user import User
 from sqlalchemy.exc import SQLAlchemyError
 from flask_bcrypt import generate_password_hash, check_password_hash
-import jwt
 from datetime import datetime, timedelta
 import pytz
 from .token_service import create_token_with_sql
