@@ -9,7 +9,7 @@ from flask_jwt_extended import JWTManager
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://default:AR9SrBhEsPg3@ep-orange-term-a4m8nc1a.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require/db_shop'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://default:AR9SrBhEsPg3@ep-orange-term-a4m8nc1a.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require/py-shop-pomelo-postgres'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'your-secret-key'
     app.config['JWT_SECRET_KEY'] = 'your-jwt-secret-key'
